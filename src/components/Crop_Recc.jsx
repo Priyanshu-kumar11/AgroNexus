@@ -11,7 +11,6 @@ const Crop_Recc = () => {
   const [predictedCrop, setPredictedCrop] = useState(null);
   const [error, setError] = useState(null);
 
-  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -25,10 +24,8 @@ const Crop_Recc = () => {
       rainfall: parseFloat(rainfall),
     };
 
-    console.log('Crop Data:', cropData);
-
     try {
-      const response = await fetch('http://127.0.0.1:5000/predict', {
+      const response = await fetch('https://agronexusbackend-5.onrender.com/predict', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,111 +48,51 @@ const Crop_Recc = () => {
 
   return (
     <div className="max-w-xl min-h-screen mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
-      <div className='w-full max-w-lg bg-white p-6 rounded-lg shadow-lg'>
-      <h1 className="text-2xl font-semibold bg-white text-center mb-6">Crop Recommendation</h1>
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="N" className="block text-lg font-medium">Nitrogen (N):</label>
-          <input
-            id="N"
-            type="number"
-            value={N}
-            onChange={(e) => setN(e.target.value)}
-            required
-            className="w-full p-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+      <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-lg">
+        <h1 className="text-2xl font-semibold bg-white text-center mb-6">Crop Recommendation</h1>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <InputField label="Nitrogen (N):" id="N" value={N} setValue={setN} />
+          <InputField label="Phosphorus (P):" id="P" value={P} setValue={setP} />
+          <InputField label="Potassium (K):" id="K" value={K} setValue={setK} />
+          <InputField label="Temperature (°C):" id="temperature" value={temperature} setValue={setTemperature} />
+          <InputField label="Humidity (%):" id="humidity" value={humidity} setValue={setHumidity} />
+          <InputField label="pH Level:" id="ph" value={ph} setValue={setPh} />
+          <InputField label="Rainfall (mm):" id="rainfall" value={rainfall} setValue={setRainfall} />
 
-        <div>
-          <label htmlFor="P" className="block text-lg font-medium">Phosphorus (P):</label>
-          <input
-            id="P"
-            type="number"
-            value={P}
-            onChange={(e) => setP(e.target.value)}
-            required
-            className="w-full p-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+          <button type="submit" className="w-full py-2 mt-4 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Predict
+          </button>
+        </form>
 
-        <div>
-          <label htmlFor="K" className="block text-lg font-medium">Potassium (K):</label>
-          <input
-            id="K"
-            type="number"
-            value={K}
-            onChange={(e) => setK(e.target.value)}
-            required
-            className="w-full p-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+        {predictedCrop && (
+          <div className="mt-6">
+            <h2 className="text-xl bg-green-100 text-green-800 font-medium">Predicted Crop: {predictedCrop}</h2>
+          </div>
+        )}
 
-        <div>
-          <label htmlFor="temperature" className="block text-lg font-medium">Temperature (°C):</label>
-          <input
-            id="temperature"
-            type="number"
-            value={temperature}
-            onChange={(e) => setTemperature(e.target.value)}
-            required
-            className="w-full p-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="humidity" className="block text-lg font-medium">Humidity (%):</label>
-          <input
-            id="humidity"
-            type="number"
-            value={humidity}
-            onChange={(e) => setHumidity(e.target.value)}
-            required
-            className="w-full p-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="ph" className="block text-lg font-medium">pH Level:</label>
-          <input
-            id="ph"
-            type="number"
-            value={ph}
-            onChange={(e) => setPh(e.target.value)}
-            required
-            className="w-full p-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="rainfall" className="block text-lg font-medium">Rainfall (mm):</label>
-          <input
-            id="rainfall"
-            type="number"
-            value={rainfall}
-            onChange={(e) => setRainfall(e.target.value)}
-            required
-            className="w-full p-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <button type="submit" className="w-full py-2 mt-4 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Predict</button>
-      </form>
-
-      {predictedCrop && (
-        <div className="mt-6">
-          <h2 className="text-xl bg-green-100 text-green-800 font-medium">Predicted Crop: {predictedCrop}</h2>
-        </div>
-      )}
-
-      {error && (
-        <div className="mt-4">
-          <p className="text-red-500">{error}</p>
-        </div>
-      )}
+        {error && (
+          <div className="mt-4">
+            <p className="text-red-500">{error}</p>
+          </div>
+        )}
       </div>
     </div>
   );
 };
+
+const InputField = ({ label, id, value, setValue }) => (
+  <div>
+    <label htmlFor={id} className="block text-lg font-medium">{label}</label>
+    <input
+      id={id}
+      type="number"
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      required
+      className="w-full p-2 mt-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+  </div>
+);
 
 export default Crop_Recc;
